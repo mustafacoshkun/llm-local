@@ -1,0 +1,10 @@
+#!/bin/bash
+DIR="$HOME/llm-local"
+if [ -f "$DIR/server.pid" ]; then
+  kill $(cat "$DIR/server.pid") 2>/dev/null
+  rm -f "$DIR/server.pid"
+fi
+# safety net: kill anything still holding the port
+PIDS=$(lsof -ti tcp:8080 2>/dev/null)
+[ -n "$PIDS" ] && kill $PIDS
+echo "Stopped."

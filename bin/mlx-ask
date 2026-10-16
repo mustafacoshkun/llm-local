@@ -1,0 +1,2 @@
+#!/bin/bash
+exec "$HOME/llm-local/.venv/bin/python" "$HOME/llm-local/ask.py" "$@"

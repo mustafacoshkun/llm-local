@@ -1,0 +1,8 @@
+.venv/
+.venv-ocr/
+*.log
+*.pid
+current_model
+*.bak
+__pycache__/
+.DS_Store

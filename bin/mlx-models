@@ -1,0 +1,26 @@
+#!/bin/bash
+HUB="${HF_HOME:-$HOME/.cache/huggingface}/hub"
+CURRENT=$(cat "$HOME/llm-local/current_model" 2>/dev/null)
+RUNNING=""
+if lsof -ti tcp:8080 >/dev/null 2>&1; then RUNNING="$CURRENT"; fi
+
+echo "Downloaded models ($HUB), newest first:"
+printf "  %-55s %7s  %-10s\n" "MODEL" "SIZE" "DOWNLOADED"
+
+for d in "$HUB"/models--*; do
+  [ -d "$d" ] || continue
+  name=$(basename "$d" | sed 's/^models--//; s/--/\//')
+  # follow symlinks, count each real file once (dedupe by inode)
+  size=$(find -L "$d/snapshots" -type f -exec stat -L -f '%i %z' {} + 2>/dev/null \
+         | sort -u | awk '{s+=$2} END {printf "%.1fG", s/1073741824}')
+  epoch=$(stat -f '%B' "$d")   # folder creation time = first download
+  echo "$epoch|$name|$size"
+done | sort -t'|' -k1,1nr | while IFS='|' read -r epoch name size; do
+  date=$(date -r "$epoch" +%Y-%m-%d)
+  mark=""
+  [ "$name" = "$RUNNING" ] && mark="  <- running"
+  printf "  %-55s %7s  %-10s%s\n" "$name" "$size" "$date" "$mark"
+done
+
+echo
+echo "Total on disk: $(du -sh "$HUB" | cut -f1)"
