@@ -1,0 +1,4 @@
+#!/bin/bash
+# Launcher with absolute paths, so it also works from GUI apps that run "/bin/bash <path>"
+# with a minimal PATH. Same program as the .venv/bin/mlx console script.
+exec "$HOME/llm-local/.venv/bin/python" -m mlxcli "$@"

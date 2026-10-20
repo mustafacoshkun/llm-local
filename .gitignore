@@ -6,3 +6,7 @@ current_model
 *.bak
 __pycache__/
 .DS_Store
+*.egg-info/
+.pytest_cache/
+build/
+dist/

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-local"
+version = "0.2.0"
+description = "One command (mlx) to serve, chat with and generate images from local MLX models on Apple Silicon"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "mlx-vlm",
+  "mlx-lm",
+  "openai",
+  "huggingface_hub",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+mlx = "mlxcli.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+mlxcli = ["prompts/*.md"]
